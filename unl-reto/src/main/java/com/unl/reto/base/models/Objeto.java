@@ -5,48 +5,46 @@ public class Objeto {
     private String nombre;
     private TipoObjeto tipo;
     private TamanioObjeto tamanio;
-    private Cajon cajon;
+    private Integer idCajon;
 
-    public Integer getId() {
-        return this.id;
-    }
+	public Integer getId() {
+		return this.id;
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public String getNombre() {
-        return this.nombre;
-    }
+	public String getNombre() {
+		return this.nombre;
+	}
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 
-    public TipoObjeto getTipo() {
-        return this.tipo;
-    }
+	public TipoObjeto getTipo() {
+		return this.tipo;
+	}
 
-    public void setTipo(TipoObjeto tipo) {
-        this.tipo = tipo;
-    }
+	public void setTipo(TipoObjeto tipo) {
+		this.tipo = tipo;
+	}
 
-    public TamanioObjeto getTamano() {
-        return this.tamano;
-    }
+	public TamanioObjeto getTamanio() {
+		return this.tamanio;
+	}
 
-    public void setTamano(TamanioObjeto tamano) {
-        this.tamano = tamano;
-    }
+	public void setTamanio(TamanioObjeto tamanio) {
+		this.tamanio = tamanio;
+	}
 
-    public Cajon getCajon() {
-        return this.cajon;
-    }
+	public Integer getIdCajon() {
+		return this.idCajon;
+	}
 
-    public void setCajon(Cajon cajon) {
-        this.cajon = cajon;
-    }
-
- 
-
+	public void setIdCajon(Integer idCajon) {
+		this.idCajon = idCajon;
+	}
+    
 }

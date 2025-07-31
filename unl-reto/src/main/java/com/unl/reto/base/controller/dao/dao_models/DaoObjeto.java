@@ -111,7 +111,7 @@ public class DaoObjeto extends AdapterDao<Objeto>{
         aux.put("id", arreglo.getId().toString());
         aux.put("Nombre", arreglo.getNombre());
         aux.put("Tipo", arreglo.getTipo().toString());
-        aux.put("Tamaño", arreglo.getTamano().toString());
+        aux.put("Tamaño", arreglo.getTamanio().toString());
         aux.put("Cajon", dp.listAll().get(arreglo.getIdCajon()).getNombre());
 
         return aux;
