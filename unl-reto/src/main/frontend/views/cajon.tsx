@@ -1,11 +1,10 @@
 import { ViewConfig } from '@vaadin/hilla-file-router/types.js';
 import { Button, DatePicker, Dialog, Grid, GridColumn, GridSortColumn, HorizontalLayout, Select, TextField, VerticalLayout } from '@vaadin/react-components';
 import { Notification } from '@vaadin/react-components/Notification';
-import { TaskService } from 'Frontend/generated/endpoints';
+import { CajonService } from 'Frontend/generated/endpoints';
 import { useSignal } from '@vaadin/hilla-react-signals';
 import handleError from 'Frontend/views/_ErrorHandler';
 import { Group, ViewToolbar } from 'Frontend/components/ViewToolbar';
-import { useGridDataProvider } from '@vaadin/hilla-react-crud';
 import { useEffect, useState } from 'react';
 
 export const config: ViewConfig = {
@@ -17,19 +16,19 @@ export const config: ViewConfig = {
   },
 };
 
-type Cajon = {
+/*type Cajon = {
   id: number;
   nombre: string;
   capacidad: number;
 
-};
+};*/
 
 type CajonEntryFormProps = {
   onCajonCreated?: () => void;
 };
 
 type CajonEntryFormPropsUpdate = {
-  Cajon: Cajon;
+  //Cajon: Cajon;
   onCajonUpdated?: () => void;
 };
 
@@ -40,7 +39,7 @@ function CajonEntryForm(props: CajonEntryFormProps) {
   const createCajon = async () => {
     try {
       if (nombre.value.trim().length > 0 && capacidad.value.trim().length > 0) {
-        await CajonService.create(nombre.value, capacidad.value);
+        await CajonService.create(nombre.value, parseInt(capacidad.value));
         if (props.onCajonCreated) {
           props.onCajonCreated();
         }
@@ -97,8 +96,8 @@ function CajonEntryForm(props: CajonEntryFormProps) {
           <TextField label="Capacidad del cajon"
             placeholder="Ingrese la capacidad del cajon"
             aria-label="Capacidad del cajon"
-            value={nombre.value}
-            onValueChanged={(evt) => (nombre.value = evt.detail.value)}
+            value={capacidad.value}
+            onValueChanged={(evt) => (capacidad.value = evt.detail.value)}
           />
         </VerticalLayout>
       </Dialog>

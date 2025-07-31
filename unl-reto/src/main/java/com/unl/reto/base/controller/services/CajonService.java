@@ -31,6 +31,7 @@ public class CajonService {
         if (nombre.trim().length() > 0 && capacidad > 0) {
             dc.getObj().setNombre(nombre);
             dc.getObj().setCapacidad(capacidad);
+            dc.getObj().setCapacidadOcupada(0);
             if (!dc.save()) {
                 throw new Exception("No se pudo guardar los datos de Cajon");
             }
