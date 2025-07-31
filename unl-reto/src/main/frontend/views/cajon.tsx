@@ -1,5 +1,5 @@
 import { ViewConfig } from '@vaadin/hilla-file-router/types.js';
-import { Button, DatePicker, Dialog, Grid, GridColumn, TextField, VerticalLayout } from '@vaadin/react-components';
+import { Button, DatePicker, Dialog, Grid, GridColumn, GridSortColumn, HorizontalLayout, Select, TextField, VerticalLayout } from '@vaadin/react-components';
 import { Notification } from '@vaadin/react-components/Notification';
 import { TaskService } from 'Frontend/generated/endpoints';
 import { useSignal } from '@vaadin/hilla-react-signals';
@@ -215,8 +215,8 @@ export default function CajonView() {
         // Recargar la lista después de eliminar
         callData();
       } catch (error) {
-        console.error('Error al eliminar la estación:', error);
-        Notification.show('Error al eliminar la estación', {
+        console.error('Error al eliminar el cajon:', error);
+        Notification.show('Error al eliminar el cajon', {
           duration: 5000,
           position: 'top-center',
           theme: 'error'
@@ -228,7 +228,6 @@ export default function CajonView() {
   const order = (event, columnId) => {
     const direction = event.detail.value;
     if (!direction) {
-      // Sin orden, mostrar lista original
       CajonService.listAll().then(setItems);
     } else {
       var dir = (direction == 'asc') ? 1 : 2;
@@ -238,7 +237,6 @@ export default function CajonView() {
 
   const callData = () => {
     CajonService.listAll().then(function (data) {
-      //console.log(data);
       setItems(data);
     });
   }
@@ -290,19 +288,6 @@ export default function CajonView() {
     }
   };
 
-  function rendercapacidad({ model }: { model: GridItemModel<Cajon> }) {
-    const capacidad = model.item.capacidad;
-    switch (capacidad) {
-      case 'ACTIVO':
-        return <span>Activo</span>;
-      case 'ENUSO':
-        return <span>En Uso</span>;
-      case 'FUERA_SERVICIO':
-        return <span>Fuera de Servicio</span>;
-      default:
-        return <span>{capacidad}</span>;
-    }
-  }
 
 
   return (
@@ -314,48 +299,12 @@ export default function CajonView() {
           <CajonEntryForm onCajonCreated={callData} />
         </Group>
       </ViewToolbar>
-      <HorizontalLayout theme="spacing">
-        <Select
-          items={itemSelect}
-          value={criterio.value}
-          onValueChanged={(evt) => (criterio.value = evt.detail.value)}
-          placeholder="Selecione un criterio"></Select>
-        {criterio.value === 'capacidad' ? (
-          <Select
-            items={[
-              { label: 'Activo', value: 'ACTIVO' },
-              { label: 'En Uso', value: 'ENUSO' },
-              { label: 'Fuera de Servicio', value: 'FUERA_SERVICIO' },
-            ]}
-            value={texto.value}
-            onValueChanged={(evt) => (texto.value = evt.detail.value)}
-            placeholder="Seleccione el capacidad"
-            style={{ width: '50%' }}
-          />
-        ) : (
-          <>
-            <TextField
-              placeholder="Search"
-              style={{ width: '50%' }}
-              value={texto.value}
-              onValueChanged={(evt) => (texto.value = evt.detail.value)}>
-              <Icon slot="prefix" icon="vaadin:search" />
-            </TextField>
-          </>
-        )}
-        <Button onClick={search} theme="primary">
-          BUSCAR
-        </Button>
-        <Button onClick={callData} theme="secondary">
-          <Icon icon="vaadin:refresh" />
-        </Button>
-      </HorizontalLayout>
       <Grid items={items}>
         <GridColumn renderer={indexIndex} header="Nro" />
         <GridSortColumn onDirectionChanged={(e) => order(e, "nombre")} path="nombre" header="Cajon" />
-        <GridSortColumn onDirectionChanged={(e) => order(e, "capacidad")} renderer={rendercapacidad} header="capacidad" />
+        <GridSortColumn onDirectionChanged={(e) => order(e, "capacidad")}  path="capacidad" header="Capacidad" />
         <GridColumn header="Acciones" renderer={indexLink} />
-        {/*<GridColumn
+        <GridColumn
           header="Eliminar"
           renderer={({ item }) => (
             <Button
@@ -365,7 +314,7 @@ export default function CajonView() {
               Eliminar
             </Button>
           )}
-        />*/}
+        />
       </Grid>
     </main>
   );
