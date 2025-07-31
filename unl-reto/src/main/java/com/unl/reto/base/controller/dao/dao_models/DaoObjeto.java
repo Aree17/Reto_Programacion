@@ -110,6 +110,8 @@ public class DaoObjeto extends AdapterDao<Objeto>{
         HashMap<String, Object> aux = new HashMap<>();
         aux.put("id", arreglo.getId().toString());
         aux.put("Nombre", arreglo.getNombre());
+        aux.put("Tipo", arreglo.getTipo().toString());
+        aux.put("Tamaño", arreglo.getTamano().toString());
         aux.put("Cajon", dp.listAll().get(arreglo.getIdCajon()).getNombre());
 
         return aux;
@@ -197,34 +199,6 @@ public class DaoObjeto extends AdapterDao<Objeto>{
                     }
                     break;
                 default:
-                    /*
-                     * if (n > 0) {
-                     * for (int i = n; i < arr.length; i++) {
-                     * if
-                     * (arr[i].get(attribute).toString().toLowerCase().startsWith(text.toLowerCase()
-                     * )) {
-                     * resp.add(arr[i]);
-                     * }
-                     * }
-                     * } else if (n < 0) {
-                     * n *= -1;
-                     * for (int i = 0; i < n; i++) {
-                     * if
-                     * (arr[i].get(attribute).toString().toLowerCase().startsWith(text.toLowerCase()
-                     * )) {
-                     * resp.add(arr[i]);
-                     * }
-                     * }
-                     * } else {
-                     * for (int i = 0; i < arr.length; i++) {
-                     * if
-                     * (arr[i].get(attribute).toString().toLowerCase().startsWith(text.toLowerCase()
-                     * )) {
-                     * resp.add(arr[i]);
-                     * }
-                     * }
-                     * }
-                     */
                     for (int i = 0; i < arr.length; i++) {
                         if (arr[i].get(attribute).toString().toLowerCase().startsWith(text.toLowerCase())) {
                             resp.add(arr[i]);
