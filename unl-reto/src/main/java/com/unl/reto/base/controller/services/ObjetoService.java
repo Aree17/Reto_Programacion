@@ -13,10 +13,8 @@ import com.unl.reto.base.controller.dao.dao_models.DaoCajon;
 import com.unl.reto.base.controller.dao.dao_models.DaoObjeto;
 import com.unl.reto.base.controller.dataStruct.list.LinkedList;
 import com.unl.reto.base.models.Cajon;
-<<<<<<< HEAD
-=======
+
 import com.unl.reto.base.models.Objeto;
->>>>>>> origin/develop
 import com.unl.reto.base.models.TamanioObjeto;
 import com.unl.reto.base.models.TipoObjeto;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
