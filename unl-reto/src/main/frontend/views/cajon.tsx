@@ -16,19 +16,19 @@ export const config: ViewConfig = {
   },
 };
 
-/*type Cajon = {
+type Cajon = {
   id: number;
   nombre: string;
   capacidad: number;
 
-};*/
+};
 
 type CajonEntryFormProps = {
   onCajonCreated?: () => void;
 };
 
 type CajonEntryFormPropsUpdate = {
-  //Cajon: Cajon;
+  Cajon: Cajon;
   onCajonUpdated?: () => void;
 };
 
@@ -119,31 +119,36 @@ function CajonEntryFormUpdate(props: CajonEntryFormPropsUpdate) {
   // Inicializa los campos con los datos de la Cajon
   const id = useSignal(props.Cajon?.id?.toString() || '');
   const nombre = useSignal(props.Cajon?.nombre || '');
-  const capacidad = useSignal(props.Cajon?.capacidad || '');
+  const capacidad = useSignal(props.Cajon?.capacidad?.toString() || '');
+
+  // Helper function to validate capacidad as an integer
+  const validateCapacidad = (value: string) => {
+    return !isNaN(Number(value)) && Number(value) > 0;
+  };
 
   // Cuando se abre el diálogo, actualiza los valores
   const openDialog = () => {
     id.value = props.Cajon?.id?.toString() || '';
     nombre.value = props.Cajon?.nombre || '';
-    capacidad.value = props.Cajon?.capacidad || '';
+    capacidad.value = props.Cajon?.capacidad?.toString() || '';
     dialogOpened.value = true;
   };
 
   const updateCajon = async () => {
     try {
-      if (nombre.value.trim().length > 0 && capacidad.value.trim().length > 0) {
+      if (nombre.value.trim().length > 0 && validateCapacidad(capacidad.value)) {
         await CajonService.update(
           parseInt(id.value),
           nombre.value,
-          capacidad.value
+          parseInt(capacidad.value)
         );
         if (props.onCajonUpdated) {
           props.onCajonUpdated();
         }
         dialogOpened.value = false;
-        Notification.show('Cajon editado', { duration: 5000, position: 'bottom-end', theme: 'success' });
+        Notification.show('Cajón actualizado', { duration: 5000, position: 'bottom-end', theme: 'success' });
       } else {
-        Notification.show('No se pudo editar, faltan datos', { duration: 5000, position: 'top-center', theme: 'error' });
+        Notification.show('No se pudo actualizar, faltan datos o la capacidad es inválida', { duration: 5000, position: 'top-center', theme: 'error' });
       }
     } catch (error) {
       console.log(error);
@@ -151,12 +156,11 @@ function CajonEntryFormUpdate(props: CajonEntryFormPropsUpdate) {
     }
   };
 
-
   return (
     <>
       <Dialog
         modeless
-        headerTitle="Editar Cajon"
+        headerTitle="Editar Cajón"
         opened={dialogOpened.value}
         onOpenedChanged={({ detail }) => {
           dialogOpened.value = detail.value;
@@ -164,22 +168,24 @@ function CajonEntryFormUpdate(props: CajonEntryFormPropsUpdate) {
         footer={
           <>
             <Button onClick={() => { dialogOpened.value = false; }}>Cancelar</Button>
-            <Button onClick={updateCajon} theme="primary">Registrar</Button>
+            <Button onClick={updateCajon} theme="primary">Editar</Button>
           </>
         }
       >
         <VerticalLayout style={{ alignItems: 'stretch', width: '18rem', maxWidth: '100%' }}>
-        <TextField label="Nombre del cajon"
-            placeholder="Ingrese el nombre del cajon"
-            aria-label="Nombre del cajon"
+          <TextField 
+            label="Nombre del Cajón"
+            placeholder="Ingrese el nombre del cajón"
+            aria-label="Nombre del cajón"
             value={nombre.value}
             onValueChanged={(evt) => (nombre.value = evt.detail.value)}
           />
-          <TextField label="Capacidad del cajon"
-            placeholder="Ingrese la capacidad del cajon"
-            aria-label="Capacidad del cajon"
-            value={nombre.value}
-            onValueChanged={(evt) => (nombre.value = evt.detail.value)}
+          <TextField 
+            label="Capacidad del Cajón"
+            placeholder="Ingrese la capacidad del cajón"
+            aria-label="Capacidad del cajón"
+            value={capacidad.value}
+            onValueChanged={(evt) => (capacidad.value = evt.detail.value)}
           />
         </VerticalLayout>
       </Dialog>
@@ -187,6 +193,7 @@ function CajonEntryFormUpdate(props: CajonEntryFormPropsUpdate) {
     </>
   );
 }
+
 
 
 //Lista de Cajones
