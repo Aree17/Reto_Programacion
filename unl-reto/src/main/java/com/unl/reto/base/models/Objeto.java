@@ -4,7 +4,7 @@ public class Objeto {
     private Integer id;
     private String nombre;
     private TipoObjeto tipo;
-    private TamanioObjeto tamano;
+    private TamanioObjeto tamanio;
     private Cajon cajon;
 
     public Integer getId() {

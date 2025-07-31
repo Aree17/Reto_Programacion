@@ -1,5 +1,5 @@
 package com.unl.reto.base.models;
 
-public enum TamañoObjeto {
+public enum TamanioObjeto {
     PEQUENO, MEDIANO, GRANDE
 }
