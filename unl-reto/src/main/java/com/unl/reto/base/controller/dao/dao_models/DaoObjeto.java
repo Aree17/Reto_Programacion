@@ -117,6 +117,8 @@ public class DaoObjeto extends AdapterDao<Objeto>{
         return aux;
     }
 
+
+    //metodo para ordenar los objetos
     public LinkedList<HashMap<String, Object>> orderByObjeto(Integer type, String attribute) throws Exception {
         LinkedList<HashMap<String, Object>> lista = all();
         if (!listAll().isEmpty()) {
@@ -127,6 +129,7 @@ public class DaoObjeto extends AdapterDao<Objeto>{
         return lista;
     }
 
+    //metodo de búsqueda binaria lineal
     private Integer bynaryLineal(HashMap<String, Object>[] arr, String attribute, String text) {
         Integer half = 0;
         if (!(arr.length == 0) && !text.isEmpty()) {
@@ -144,8 +147,9 @@ public class DaoObjeto extends AdapterDao<Objeto>{
         return half;
     }
 
-    // metodo para buscar
 
+
+    //Método de búsqueda
     public LinkedList<HashMap<String, Object>> search(String attribute, String text, Integer type) throws Exception {
         LinkedList<HashMap<String, Object>> lista = all();
         LinkedList<HashMap<String, Object>> resp = new LinkedList<>();

@@ -68,6 +68,8 @@ public class DaoCajon extends AdapterDao<Cajon> {
         return aux;
     }
 
+
+
     public void quickSort(HashMap arr[], int begin, int end, Integer type, String attribute) {
         if (begin < end) {
             int partitionIndex = partition(arr, begin, end, type, attribute);
@@ -107,6 +109,8 @@ public class DaoCajon extends AdapterDao<Cajon> {
         return i + 1;
     }
 
+
+    // Método para ordenar los cajones
     public LinkedList<HashMap<String, Object>> orderByCajon(Integer type, String attribute) throws Exception {
         LinkedList<HashMap<String, Object>> lista = all();
         if (!listAll().isEmpty()) {
@@ -117,6 +121,8 @@ public class DaoCajon extends AdapterDao<Cajon> {
         return lista;
     }
 
+
+    // Método para obtener un cajón por su id
     public Cajon getById(Integer id) {
         if (!this.listAll().isEmpty()) {
             Cajon[] arreglo = this.listAll().toArray();
@@ -129,6 +135,8 @@ public class DaoCajon extends AdapterDao<Cajon> {
         return null;
     }
 
+
+    // Método para eliminar un cajón por su id
     public Boolean deleteCajon(Integer id) {
         try {
             super.delete(id);
@@ -140,6 +148,8 @@ public class DaoCajon extends AdapterDao<Cajon> {
         }
     }
 
+
+    //Metodo de búsqueda binaria lineal
     private Integer bynaryLineal(HashMap<String, Object>[] arr, String attribute, String text) {
         Integer half = 0;
         if (!(arr.length == 0) && !text.isEmpty()) {
@@ -159,6 +169,8 @@ public class DaoCajon extends AdapterDao<Cajon> {
         return half;
     }
 
+
+    //Método de búsqueda
     public LinkedList<HashMap<String, Object>> search(String attribute, String text, Integer type) throws Exception {
         LinkedList<HashMap<String, Object>> lista = all();
         LinkedList<HashMap<String, Object>> resp = new LinkedList<>();
