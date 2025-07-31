@@ -1,7 +1,7 @@
 import { ViewConfig } from '@vaadin/hilla-file-router/types.js';
 import { Button, DatePicker, Dialog, Grid, GridColumn, GridSortColumn, HorizontalLayout, Select, TextField, VerticalLayout } from '@vaadin/react-components';
 import { Notification } from '@vaadin/react-components/Notification';
-import { CajonService } from 'Frontend/generated/endpoints';
+import { CajonService, ObjetoService } from 'Frontend/generated/endpoints';
 import { useSignal } from '@vaadin/hilla-react-signals';
 import handleError from 'Frontend/views/_ErrorHandler';
 import { Group, ViewToolbar } from 'Frontend/components/ViewToolbar';
@@ -25,6 +25,10 @@ type Cajon = {
 
 type CajonEntryFormProps = {
   onCajonCreated?: () => void;
+};
+
+type ObjetoEntryFormProps = {
+  onObjetoCreated?: () => void;
 };
 
 type CajonEntryFormPropsUpdate = {
@@ -195,6 +199,89 @@ function CajonEntryFormUpdate(props: CajonEntryFormPropsUpdate) {
   );
 }
 
+//Guardar Objeto
+function ObjetoEntryForm(props: ObjetoEntryFormProps) {
+  const nombre = useSignal('');
+  const tipo = useSignal('');
+  const tamanio = useSignal('');
+  const cajon = useSignal('');
+  const createObjeto = async () => {
+    try {
+      if (nombre.value.trim().length > 0 && tipo.value.trim().length > 0 && tamanio.value.trim().length > 0 && cajon.value.trim().length > 0) {
+        const idCajon = parseInt(cajon.value);
+        await ObjetoService.create(nombre.value, tipo.value, tamanio.value, idCajon);
+        if (props.onObjetoCreated) {
+          props.onObjetoCreated();
+        }
+        nombre.value = '';
+        tipo.value = '';
+        tamanio.value = '';
+        cajon.value = '';
+
+        dialogOpened.value = false;
+        Notification.show('Objeto creado', { duration: 5000, position: 'bottom-end', theme: 'success' });
+      } else {
+        Notification.show('No se pudo crear, faltan datos', { duration: 5000, position: 'top-center', theme: 'error' });
+      }
+
+    } catch (error) {
+      console.log(error);
+      handleError(error);
+    }
+  };
+
+
+  const dialogOpened = useSignal(false);
+  return (
+    <>
+      <Dialog
+        modeless
+        headerTitle="Nuevo Objeto"
+        opened={dialogOpened.value}
+        onOpenedChanged={({ detail }) => {
+          dialogOpened.value = detail.value;
+        }}
+        footer={
+          <>
+            <Button
+              onClick={() => {
+                dialogOpened.value = false;
+              }}
+            >
+              Cancelar
+            </Button>
+            <Button onClick={createObjeto} theme="primary">
+              Crear
+            </Button>
+
+          </>
+        }
+      >
+        <VerticalLayout style={{ alignItems: 'stretch', width: '18rem', maxWidth: '100%' }}>
+          <TextField label="Nombre del Objeto"
+            placeholder="Ingrese el nombre del Objeto"
+            aria-label="Nombre del Objeto"
+            value={nombre.value}
+            onValueChanged={(evt) => (nombre.value = evt.detail.value)}
+          />
+          <TextField label="Capacidad del Objeto"
+            placeholder="Ingrese la capacidad del Objeto"
+            aria-label="Capacidad del Objeto"
+            value={nombre.value}
+            onValueChanged={(evt) => (nombre.value = evt.detail.value)}
+          />
+        </VerticalLayout>
+      </Dialog>
+      <Button
+        onClick={() => {
+          dialogOpened.value = true;
+        }}
+      >
+        Agregar
+      </Button>
+    </>
+  );
+}
 
 
 //Lista de Cajones
@@ -208,9 +295,7 @@ export default function CajonView() {
   }, []);
 
   const deleteCajon = async (Cajon: Cajon) => {
-    //mensaje antes de eliminar
     const confirmed = window.confirm(`¿Está seguro de que desea eliminar la estación con el código ${Cajon.nombre}?`);
-
     if (confirmed) {
       try {
         await CajonService.delete(Cajon.id);
@@ -219,7 +304,6 @@ export default function CajonView() {
           position: 'bottom-end',
           theme: 'success'
         });
-        // Recargar la lista después de eliminar
         callData();
       } catch (error) {
         console.error('Error al eliminar el cajon:', error);
@@ -255,8 +339,6 @@ export default function CajonView() {
       </span>
     );
   }
-
-
 
   function indexIndex({ model }: { model: GridItemModel<Cajon> }) {
     return (
@@ -295,23 +377,27 @@ export default function CajonView() {
     }
   };
 
-
-
   return (
-
     <main className="w-full h-full flex flex-col box-border gap-s p-m">
-
       <ViewToolbar title="Lista de Cajones">
         <Group>
           <CajonEntryForm onCajonCreated={callData} />
+        </Group> 
+        {/* Botón de agregar objeto dentro de una columna */}
+        <Group>
+          <ObjetoEntryForm onObjetoCreated={callData} />
         </Group>
       </ViewToolbar>
       <Grid items={items}>
         <GridColumn renderer={indexIndex} header="Nro" />
         <GridSortColumn onDirectionChanged={(e) => order(e, "nombre")} path="nombre" header="Cajon" />
-        <GridSortColumn onDirectionChanged={(e) => order(e, "capacidad")}  path="capacidad" header="Capacidad" />
-        <GridSortColumn onDirectionChanged={(e) => order(e, "capacidadOcupada")}  path="capacidadOcupada" header="capacidad Ocupada" />
+        <GridSortColumn onDirectionChanged={(e) => order(e, "capacidad")} path="capacidad" header="Capacidad" />
+        <GridSortColumn onDirectionChanged={(e) => order(e, "capacidadOcupada")} path="capacidadOcupada" header="Capacidad Ocupada" />
+        
+        {/* Acción de editar */}
         <GridColumn header="Acciones" renderer={indexLink} />
+        
+        {/* Acción de eliminar */}
         <GridColumn
           header="Eliminar"
           renderer={({ item }) => (
@@ -320,6 +406,22 @@ export default function CajonView() {
               onClick={() => deleteCajon(item)}
             >
               Eliminar
+            </Button>
+          )}
+        />
+        <GridColumn
+          header="Agregar Objeto"
+          renderer={() => (
+            <Button
+              theme="primary"
+              onClick={() => {
+                const dialogOpened = useSignal(true);
+                return (
+                  <ObjetoEntryForm onObjetoCreated={callData} />
+                );
+              }}
+            >
+              Agregar Objeto
             </Button>
           )}
         />
