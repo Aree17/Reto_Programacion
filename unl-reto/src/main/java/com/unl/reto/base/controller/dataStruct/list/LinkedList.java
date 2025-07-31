@@ -23,12 +23,8 @@ public class LinkedList <E>{
 
     private Node<E> getNode(Integer pos) {
         if(isEmpty()){
-            throw new ArrayIndexOutOfBoundsException("Lista vacìa");
-            //System.out.println("Lista vacia");
-            //return null;
+            throw new ArrayIndexOutOfBoundsException("Lista vacía");
         } else if(pos < 0 || pos >= length){
-            //System.out.println("Fuera de rango");
-            //return null;
             throw new ArrayIndexOutOfBoundsException("fuera de rango...");
         } else if(pos==0){
             return head;
@@ -224,43 +220,11 @@ private void addLast(E data){
         last=null;
         length=0;
     }
-    public static void main(String[] args) {
-        LinkedList<Double> lista = new LinkedList<>();
-        try{
-            lista.add(56.7);
-            lista.add(65.7);
-            lista.add(56.7, 0);
-            lista.add(4.7);
-            lista.add(9.0, 3);
-            lista.add(-1.0, lista.getLength());
-            System.out.println(lista.print());
-            //System.out.println(lista.get(lista.getLength()-1));
-            System.out.println("Actualizar ");
-            lista.update(10.0, 0);
-            System.out.println(lista.print());
-            System.out.println(lista.length);
-            System.out.println(lista.length);
-            System.out.println(lista.print());
-
-            System.out.println("Eliminar cola");
-            lista.deleteLast();
-            System.out.println(lista.length);
-            System.out.println(lista.print());
-            lista.delete(3);
-            System.out.println("Eliminar ");
-            System.out.println(lista.length);
-            System.out.println(lista.print());
-            System.out.println("Tamaño ");
-            System.out.println(lista.length);
-        }catch(Exception e){
-            System.out.println("Error "+e);
-        }
-    }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("[");
-        Node<E> current = head; // Suponiendo que tienes un nodo 'head' en tu LinkedList
+        Node<E> current = head; 
         while (current != null) {
             sb.append(current.data);
             if (current.next != null) {
