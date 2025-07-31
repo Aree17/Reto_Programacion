@@ -13,6 +13,10 @@ import com.unl.reto.base.controller.dao.dao_models.DaoCajon;
 import com.unl.reto.base.controller.dao.dao_models.DaoObjeto;
 import com.unl.reto.base.controller.dataStruct.list.LinkedList;
 import com.unl.reto.base.models.Cajon;
+<<<<<<< HEAD
+=======
+import com.unl.reto.base.models.Objeto;
+>>>>>>> origin/develop
 import com.unl.reto.base.models.TamanioObjeto;
 import com.unl.reto.base.models.TipoObjeto;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
@@ -44,19 +48,64 @@ public class ObjetoService {
     public List<HashMap> search(String attribute, String text, Integer type) throws Exception {
         LinkedList<HashMap<String, Object>> lista = dc.search(attribute, text, type);
         if (!lista.isEmpty()) {
-            return Arrays.asList(lista.toArray()); 
-        }else {
+            return Arrays.asList(lista.toArray());
+        } else {
             return new ArrayList<>();
         }
     }
 
     public void create(@NotEmpty String nombre, @NotEmpty String tipo, @NotEmpty String tamanio, Integer idCajon) throws Exception {
         if (nombre.trim().length() > 0 && tipo.trim().length() > 0 && tamanio.trim().length() > 0 && idCajon != null) {
+            // 1. Obtener el cajón destino
+            DaoCajon daoCajon = new DaoCajon();
+            Cajon cajon = daoCajon.getById(idCajon);
+            if (cajon == null) {
+                throw new Exception("No existe el cajón indicado");
+            }
+
+            // 2. Contar la cantidad actual de objetos en ese cajón
+            int ocupados = 0;
+            Objeto[] objetos = dc.listAll().toArray();
+            for (Objeto obj : objetos) {
+                if (obj.getIdCajon().equals(idCajon)) {
+                    ocupados++;
+                }
+            }
+
+            // 3. Verificar capacidad
+            if (ocupados >= cajon.getCapacidad()) {
+                throw new Exception("El cajón está lleno, no se pueden agregar más objetos.");
+            }
+
+            // 4. Guardar el objeto
             dc.getObj().setNombre(nombre);
             dc.getObj().setTipo(TipoObjeto.valueOf(tipo));
             dc.getObj().setTamanio(TamanioObjeto.valueOf(tamanio));
+            dc.getObj().setIdCajon(idCajon);
             if (!dc.save()) {
-                throw new Exception("No se pudo guardar los datos de Persona");
+                throw new Exception("No se pudo guardar los datos de Objeto");
+            }
+
+            // 5. Actualizar capacidad ocupada del cajón
+            // Vuelve a contar porque ya se añadió el objeto nuevo
+            ocupados++;
+            cajon.setCapacidadOcupada(ocupados);
+
+            // Buscar la posición real en la lista enlazada
+            int posicion = -1;
+            LinkedList<Cajon> cajones = daoCajon.listAll();
+            for (int i = 0; i < cajones.getLength(); i++) {
+                if (cajones.get(i).getId().equals(cajon.getId())) {
+                    posicion = i;
+                    break;
+                }
+            }
+
+            if (posicion >= 0) {
+                daoCajon.setObj(cajon);
+                daoCajon.update(posicion);
+            } else {
+                throw new Exception("No se encontró el cajón para actualizar");
             }
         }
     }
@@ -68,9 +117,9 @@ public class ObjetoService {
             dc.getObj().setNombre(nombre);
             dc.getObj().setTipo(TipoObjeto.valueOf(tipo));
             dc.getObj().setTamanio(TamanioObjeto.valueOf(tamanio));
-            if(!dc.update(id)){
-                throw new  Exception("No se pudo guardar los datos de Estacion");
-    
+            if (!dc.update(id)) {
+                throw new Exception("No se pudo guardar los datos de Estacion");
+
             }
         }
     }

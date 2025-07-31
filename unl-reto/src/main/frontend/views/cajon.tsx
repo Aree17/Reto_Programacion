@@ -306,6 +306,7 @@ function ObjetoEntryForm(props: ObjetoEntryFormProps) {
     </>
   );
 }
+
 // --------- Dialog para mostrar Objetos de un Cajón ----------
 function MostrarObjetosDialog({ idCajon }: { idCajon: number }) {
   const [dialogOpened, setDialogOpened] = useState(false);
@@ -429,10 +430,12 @@ export default function CajonView() {
   return (
     <main className="w-full h-full flex flex-col box-border gap-s p-m">
       <ViewToolbar title="Lista de Cajones">
-      <HorizontalLayout>
+        <Group>
+        <HorizontalLayout>
             <CajonEntryForm onCajonCreated={callData} />
             <ObjetoEntryForm idCajon={0} onObjetoCreated={callData} />
-          </HorizontalLayout>
+        </HorizontalLayout>
+        </Group>
       </ViewToolbar>
       <Grid items={items}>
         <GridColumn renderer={indexIndex} header="Nro" />
