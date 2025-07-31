@@ -9,8 +9,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.github.javaparser.quality.NotNull;
+import com.unl.reto.base.controller.dao.dao_models.DaoCajon;
 import com.unl.reto.base.controller.dao.dao_models.DaoObjeto;
 import com.unl.reto.base.controller.dataStruct.list.LinkedList;
+import com.unl.reto.base.models.Cajon;
 import com.unl.reto.base.models.TamanioObjeto;
 import com.unl.reto.base.models.TipoObjeto;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
@@ -72,5 +74,43 @@ public class ObjetoService {
             }
         }
     }
+
+    public List<String> ListTamanio() {
+        List<String> lista = new ArrayList<>();
+        for (TamanioObjeto r : TamanioObjeto.values()) {
+            lista.add(r.toString());
+        }
+        return lista;
+    }
+
+    public List<String> ListTipo() {
+        List<String> lista = new ArrayList<>();
+        for (TipoObjeto r : TipoObjeto.values()) {
+            lista.add(r.toString());
+        }
+        return lista;
+    }
+
+    public List<HashMap> listCajonCombo(){
+        List<HashMap> lista = new ArrayList<>();
+        DaoCajon  dp= new DaoCajon();
+        if(!dp.listAll().isEmpty()) {
+            Cajon [] arreglo = dp.listAll().toArray();
+            for(int i = 0; i < arreglo.length; i++) {
+                HashMap<String, String> aux = new HashMap<>();
+                aux.put("value", arreglo[i].getId().toString(i));
+                aux.put("label", arreglo[i].getNombre());
+                lista.add(aux);
+            }
+        }
+        return lista;
+    }
+
+
+    
+
+
+
+
 
 }
