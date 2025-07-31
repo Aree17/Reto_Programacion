@@ -109,8 +109,8 @@ public class DaoObjeto extends AdapterDao<Objeto>{
         DaoCajon dp = new DaoCajon();
         HashMap<String, Object> aux = new HashMap<>();
         aux.put("id", arreglo.getId().toString());
-        aux.put("nombre", arreglo.getPlaca());
-        aux.put("Cajon", dp.listAll().get(arreglo.getIdCajon()).getUsuario());
+        aux.put("Nombre", arreglo.getNombre());
+        aux.put("Cajon", dp.listAll().get(arreglo.getIdCajon()).getNombre());
 
         return aux;
     }
