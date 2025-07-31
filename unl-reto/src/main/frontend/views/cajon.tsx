@@ -36,6 +36,7 @@ type CajonEntryFormPropsUpdate = {
 function CajonEntryForm(props: CajonEntryFormProps) {
   const nombre = useSignal('');
   const capacidad = useSignal('');
+  const capacidadOcupada = useSignal('0'); 
   const createCajon = async () => {
     try {
       if (nombre.value.trim().length > 0 && capacidad.value.trim().length > 0) {
@@ -309,6 +310,7 @@ export default function CajonView() {
         <GridColumn renderer={indexIndex} header="Nro" />
         <GridSortColumn onDirectionChanged={(e) => order(e, "nombre")} path="nombre" header="Cajon" />
         <GridSortColumn onDirectionChanged={(e) => order(e, "capacidad")}  path="capacidad" header="Capacidad" />
+        <GridSortColumn onDirectionChanged={(e) => order(e, "capacidadOcupada")}  path="capacidadOcupada" header="capacidad Ocupada" />
         <GridColumn header="Acciones" renderer={indexLink} />
         <GridColumn
           header="Eliminar"

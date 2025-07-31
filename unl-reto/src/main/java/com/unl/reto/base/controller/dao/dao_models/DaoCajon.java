@@ -236,21 +236,4 @@ public class DaoCajon extends AdapterDao<Cajon> {
         return resp;
     }
 
-    public static void main(String[] args) {
-        DaoCajon daoCajon = new DaoCajon();
-        try {
-            // Crear un nuevo cajón
-            Cajon cajon1 = new Cajon();
-            cajon1.setNombre("Cajon 1");
-            cajon1.setCapacidad(100);
-            cajon1.setCapacidadOcupada(30); // Seteando capacidad ocupada
-            daoCajon.setObj(cajon1);
-            daoCajon.save();
-            System.out.println("Cajón 1 guardado: " + daoCajon.listAll());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 }
